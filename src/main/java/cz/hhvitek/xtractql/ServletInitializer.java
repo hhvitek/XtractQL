@@ -1,4 +1,4 @@
-package cz.hhvitek.xmlparser;
+package cz.hhvitek.xtractql;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -7,7 +7,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(XmlparserApplication.class);
+		return application.sources(XtractQLApplication.class);
 	}
 
 }
