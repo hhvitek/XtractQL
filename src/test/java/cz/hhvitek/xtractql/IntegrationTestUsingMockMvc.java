@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-class XtractQLApplicationTests {
+class IntegrationTestUsingMockMvc {
 	private static final String BASE_API_PATH = XtractQLController.BASE_PATH;
 
 	@Autowired
@@ -43,7 +43,6 @@ class XtractQLApplicationTests {
 	void basicIntegrationNonExistentPageTest() throws Exception {
 		mockMvc.perform(
 						get(BASE_API_PATH + "/non_existent_endpoint")
-								.header("Host", "localhost:8080")
 								.accept(MediaType.APPLICATION_JSON_VALUE)
 				)
 				.andExpect(status().isNotFound());
