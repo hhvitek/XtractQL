@@ -18,6 +18,7 @@ import cz.hhvitek.xtractql.app.config.Properties;
 import cz.hhvitek.xtractql.app.downloader.FileDownloaderService;
 import cz.hhvitek.xtractql.app.service.api.XMLFetcherService;
 import cz.hhvitek.xtractql.app.zip.ZipService;
+import cz.hhvitek.xtractql.app.zip.ZipServiceImpl;
 
 @Service("xmlfetcher-download")
 public class XMLFetcherFileDownloadServiceImpl implements XMLFetcherService {
@@ -25,10 +26,10 @@ public class XMLFetcherFileDownloadServiceImpl implements XMLFetcherService {
 	private final FileDownloaderService fileDownloaderService;
 	private final ZipService zipService;
 
-	public XMLFetcherFileDownloadServiceImpl(Properties properties, FileDownloaderService fileDownloaderService, ZipService zipService) {
+	public XMLFetcherFileDownloadServiceImpl(Properties properties, FileDownloaderService fileDownloaderService) {
 		this.properties = properties;
 		this.fileDownloaderService = fileDownloaderService;
-		this.zipService = zipService;
+		this.zipService = new ZipServiceImpl();
 	}
 
 	/**

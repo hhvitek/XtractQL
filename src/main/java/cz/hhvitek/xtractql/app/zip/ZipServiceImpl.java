@@ -12,10 +12,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-@Service
+
 public class ZipServiceImpl implements ZipService {
 	@Override
 	public void unzip(File zip, File destinationFolder) throws IOException {
