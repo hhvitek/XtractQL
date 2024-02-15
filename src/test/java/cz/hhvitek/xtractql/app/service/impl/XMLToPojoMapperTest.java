@@ -1,4 +1,4 @@
-package cz.hhvitek.xtractql.xml;
+package cz.hhvitek.xtractql.app.service.impl;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import cz.hhvitek.xtractql.TestUtils;
 import cz.hhvitek.xtractql.app.Municipality;
 import cz.hhvitek.xtractql.app.MunicipalityPart;
-import cz.hhvitek.xtractql.app.service.impl.XMLToPojoMapper;
 
 @ExtendWith(SpringExtension.class)
 public class XMLToPojoMapperTest {
@@ -122,6 +121,95 @@ public class XMLToPojoMapperTest {
 		try (InputStream is = new ByteArrayInputStream(xmlObecWithoutCode.getBytes(StandardCharsets.UTF_8))) {
 			IOException ex = Assertions.assertThrows(IOException.class, () -> mapper.map(is));
 			Assertions.assertTrue(ex.getMessage().startsWith("Missing required creator property 'Kod'"));
+		}
+	}
+
+	@Test
+	void parseMissingRequiredFields_NoObecInsideCastObce_XmlTest() throws IOException {
+		String xml = """
+				<?xml version="1.0" encoding="UTF-8"?>
+				<vf:VymennyFormat
+						xmlns:gml="http://www.opengis.net/gml/3.2"
+						xmlns:vf="urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1"
+						xmlns:obi="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1"
+						xmlns:coi="urn:cz:isvs:ruian:schemas:CastObceIntTypy:v1"
+				>
+					<vf:Hlavicka>
+						<vf:VerzeVFR>3.1</vf:VerzeVFR>
+					</vf:Hlavicka>
+					<vf:Data>
+						<vf:Obce>
+							<vf:Obec gml:id="OB.573060">
+								<obi:Kod>573060</obi:Kod>
+								<obi:Nazev>Kopidlno</obi:Nazev>
+							</vf:Obec>
+						</vf:Obce>
+						<vf:CastiObci>
+							<vf:CastObce gml:id="CO.31801">
+								<coi:Kod>31801</coi:Kod>
+								<coi:Nazev>Drahoraz</coi:Nazev>
+							</vf:CastObce>
+							<vf:CastObce gml:id="CO.31828">
+								<coi:Kod>31828</coi:Kod>
+								<coi:Nazev>Pševes</coi:Nazev>
+								<coi:Obec>
+									<obi:Kod>573060</obi:Kod>
+								</coi:Obec>
+							</vf:CastObce>
+						</vf:CastiObci>
+					</vf:Data>
+				</vf:VymennyFormat>
+				""";
+
+		try (InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
+			IOException ex = Assertions.assertThrows(IOException.class, () -> mapper.map(is));
+			Assertions.assertTrue(ex.getMessage().startsWith("Missing required creator property 'Obec'"));
+		}
+	}
+
+	@Test
+	void parseMissingRequiredFields_NoObecInsideCastObce_InvalidIdTest() throws IOException {
+		String xml = """
+				<?xml version="1.0" encoding="UTF-8"?>
+				<vf:VymennyFormat
+						xmlns:gml="http://www.opengis.net/gml/3.2"
+						xmlns:vf="urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1"
+						xmlns:obi="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1"
+						xmlns:coi="urn:cz:isvs:ruian:schemas:CastObceIntTypy:v1"
+				>
+					<vf:Hlavicka>
+						<vf:VerzeVFR>3.1</vf:VerzeVFR>
+					</vf:Hlavicka>
+					<vf:Data>
+						<vf:Obce>
+							<vf:Obec gml:id="OB.573060">
+								<obi:Kod>573060</obi:Kod>
+								<obi:Nazev>Kopidlno</obi:Nazev>
+							</vf:Obec>
+						</vf:Obce>
+						<vf:CastiObci>
+							<vf:CastObce gml:id="CO.31801">
+								<coi:Kod>31801</coi:Kod>
+								<coi:Nazev>Drahoraz</coi:Nazev>
+								<coi:Obec>
+									<obi:Kod>666666</obi:Kod>
+								</coi:Obec>
+							</vf:CastObce>
+							<vf:CastObce gml:id="CO.31828">
+								<coi:Kod>31828</coi:Kod>
+								<coi:Nazev>Pševes</coi:Nazev>
+								<coi:Obec>
+									<obi:Kod>573060</obi:Kod>
+								</coi:Obec>
+							</vf:CastObce>
+						</vf:CastiObci>
+					</vf:Data>
+				</vf:VymennyFormat>
+				""";
+
+		try (InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
+			IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> mapper.map(is));
+			Assertions.assertEquals("XML contains CastObce, without proper Obec found. CastObce Kod: 31801", ex.getMessage());
 		}
 	}
 

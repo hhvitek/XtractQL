@@ -2,7 +2,6 @@ package cz.hhvitek.xtractql.app.service.impl;
 
 import java.io.IOException;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -16,12 +15,9 @@ import cz.hhvitek.xtractql.app.service.api.MunicipalityService;
 @Service
 public class MunicipalityServiceImpl  implements MunicipalityService {
 	private final MunicipalityRepository municipalityRepository;
-	private final ModelMapper mapper;
 
 	public MunicipalityServiceImpl(MunicipalityRepository municipalityRepository) {
 		this.municipalityRepository = municipalityRepository;
-		// entity and "dto" (Obec) and Municipality interface are crafted in a such manner to allow easy use of model mapper here
-		this.mapper = new ModelMapper();
 	}
 
 	@Override
@@ -29,7 +25,7 @@ public class MunicipalityServiceImpl  implements MunicipalityService {
 	public Municipality save(Municipality municipality) throws IOException {
 		Assert.notNull(municipality, "Municipality cannot be null");
 
-		MunicipalityEntity oldEntity = municipalityRepository.getReferenceById(municipality.getCode());
+		MunicipalityEntity oldEntity = municipalityRepository.findById(municipality.getCode()).orElse(null);
 		MunicipalityEntity entity = toEntity(municipality, oldEntity);
 		// now here could be an additional step to convert "entity" back into "dto" but well lets just return "entity"
 		return municipalityRepository.save(entity);
@@ -37,10 +33,10 @@ public class MunicipalityServiceImpl  implements MunicipalityService {
 
 	private MunicipalityEntity toEntity(Municipality newMunicipality, MunicipalityEntity oldEntity) {
 		if (oldEntity != null) {
-			mapper.map(newMunicipality, oldEntity);
-			return oldEntity;
+			return oldEntity.updateFrom(newMunicipality);
 		}
 
-		return mapper.map(newMunicipality, MunicipalityEntity.class);
+		MunicipalityEntity newEntity = new MunicipalityEntity();
+		return newEntity.updateFrom(newMunicipality);
 	}
 }

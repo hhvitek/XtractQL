@@ -1,6 +1,5 @@
 package cz.hhvitek.xtractql.app.jpa.entity;
 
-import cz.hhvitek.xtractql.app.Municipality;
 import cz.hhvitek.xtractql.app.MunicipalityPart;
 
 import jakarta.persistence.CascadeType;
@@ -24,6 +23,16 @@ public class MunicipalityPartEntity implements MunicipalityPart {
 	@JoinColumn(name = "municipality_id", nullable = false)
 	private MunicipalityEntity municipality;
 
+	public MunicipalityPartEntity() {
+		//
+	}
+
+	public MunicipalityPartEntity(String code, String name, MunicipalityEntity municipality) {
+		this.code = code;
+		this.name = name;
+		this.municipality = municipality;
+	}
+
 	@Override
 	public String getCode() {
 		return code;
@@ -43,7 +52,7 @@ public class MunicipalityPartEntity implements MunicipalityPart {
 	}
 
 	@Override
-	public Municipality getMunicipality() {
+	public MunicipalityEntity getMunicipality() {
 		return municipality;
 	}
 
