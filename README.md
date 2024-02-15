@@ -1,4 +1,4 @@
-# spring-xml-file-downloader
+# XtractQL
 
 Spring boot app to download remote file from URL. This file is archived xml (zip format). Parse and store some data into DB.
 
