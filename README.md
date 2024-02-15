@@ -10,3 +10,5 @@ Spring boot app to download remote file from URL. This file is archived xml (zip
 spring.datasource.url=jdbc:sqlite:<PATH TO SQLITE FILE>
 parser.tmp.folder=/tmp/parserTemporaryFolder
 ```
+
+- Endpoint POST /xtractql { fileUrl: "http://example/example.xml.zip" }
