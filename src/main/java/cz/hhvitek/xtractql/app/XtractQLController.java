@@ -30,7 +30,7 @@ public class XtractQLController {
 	private final XMLFetcherService XMLFetcherService;
 	private final MunicipalityService municipalityService;
 
-	public XtractQLController(@Qualifier("xmlfetcher-download") XMLFetcherService XMLFetcherService, MunicipalityService municipalityService) {
+	public XtractQLController(@Qualifier("xmlfetcher-onfly") XMLFetcherService XMLFetcherService, MunicipalityService municipalityService) {
 		this.XMLFetcherService = XMLFetcherService;
 		this.municipalityService = municipalityService;
 	}
